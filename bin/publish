@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -x
+
+FSHTANK=$1
+[[ -z "$FSHTANK" ]] && echo "FSHTANK not set" && exit 1
+
+function run_ig_publisher {
+  if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
+    if [[ -z "${DEPLOY_ENV}" ]]; then
+      echo "* Installing publisher (force)"
+      ( cd $FSHTANK && OSTYPE=linux-gnu ./_updatePublisher.sh -f )
+    else
+      echo "* Installing publisher"
+      ( cd $FSHTANK && OSTYPE=linux-gnu ./_updatePublisher.sh )
+    fi
+  fi
+
+  echo "* Running IG Publisher"
+  ( cd $FSHTANK && chmod 0755 *.sh && JAVA_OPTS=$JAVA_OPTS OSTYPE=linux-gnu ./_genonce.sh )
+}
+
+echo "* Building Implementation Guide"
+run_ig_publisher
