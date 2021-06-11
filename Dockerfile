@@ -1,7 +1,5 @@
 FROM node:14.17.0-alpine
 
-ENV FSHTANK=$fshtank
-
 RUN apk add --no-cache \
   bash \
   ruby ruby-dev \
