@@ -37,12 +37,22 @@ http://localhost:2021 in your browser)
 
 ## Helper
 
-You can use the script `nori.sh` (Windows version coming soon), which is a
-docker wrapper:
+*For Mac and linux* users, you can use the script `nori.sh`, which is a docker
+wrapper:
 
 ```
 > ./nori.sh sushi --init
 > ./nori.sh sushi ./MyNiceIG
 > ./nori.sh publish ./MyNiceIG
 > ./nori.sh serve ./MyNiceIG
+```
+
+*For windows users*, you can use the script `nori.bat`. NOTE that when passing in
+the directory, use relative paths using forward slashes, as shown here:
+
+```
+> nori sushi --init
+> nori sushi ./MyNiceIG
+> nori publish ./MyNiceIG
+> nori serve ./MyNiceIG
 ```
