@@ -56,6 +56,7 @@ wrapper:
 > ./nori.sh sushi ./MyNiceIG
 > ./nori.sh publish ./MyNiceIG
 > ./nori.sh serve ./MyNiceIG
+> ./nori.sh gofsh ./json-input
 ```
 
 *For windows users*, you can use the script `nori.bat`. NOTE that when passing in
@@ -66,4 +67,5 @@ the directory, use relative paths using forward slashes, as shown here:
 > nori sushi ./MyNiceIG
 > nori publish ./MyNiceIG
 > nori serve ./MyNiceIG
+> nori gofsh ./json-input
 ```
