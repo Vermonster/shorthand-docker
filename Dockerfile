@@ -16,6 +16,7 @@ RUN npm config set prefix "/.npm-global"
 ENV PATH="/.npm-global/bin:${PATH}"
 
 RUN npm install --global fsh-sushi
+RUN npm install --global gofsh
 
 WORKDIR /workspace
 
