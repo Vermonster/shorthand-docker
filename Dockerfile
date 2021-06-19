@@ -12,14 +12,12 @@ RUN gem install bigdecimal json jekyll etc webrick
 
 RUN mkdir -p /.npm-global
 RUN npm config set prefix "/.npm-global"
-
 ENV PATH="/.npm-global/bin:${PATH}"
 
 RUN npm install --global fsh-sushi
 RUN npm install --global gofsh
 
+COPY VERSION  /etc
+COPY bin /.npm-global/bin
+
 WORKDIR /workspace
-
-COPY bin bin
-
-ENV PATH="/workspace/bin:${PATH}"
