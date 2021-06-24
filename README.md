@@ -52,20 +52,23 @@ to copy these scripts into your PATH.
 wrapper:
 
 ```
-> ./nori.sh sushi --init
-> ./nori.sh sushi ./MyNiceIG
-> ./nori.sh publish ./MyNiceIG
-> ./nori.sh serve ./MyNiceIG
-> ./nori.sh gofsh ./json-input
+> ./nori sushi --init
+> ./nori sushi ./MyNiceIG
+> ./nori publish ./MyNiceIG
+> ./nori serve ./MyNiceIG
+> ./nori gofsh ./json-input
 ```
 
-*For windows users*, you can use the script `nori.bat`. NOTE that when passing in
-the directory, use relative paths using forward slashes, as shown here:
+*For windows users*, you can use the script `nori.bat`.
 
 ```
-> nori sushi --init
-> nori sushi ./MyNiceIG
-> nori publish ./MyNiceIG
-> nori serve ./MyNiceIG
-> nori gofsh ./json-input
+> .\nori sushi --init
+> .\nori sushi ./MyNiceIG
+> .\nori publish ./MyNiceIG
+> .\nori serve ./MyNiceIG
+> .\nori gofsh ./json-input
 ```
+
+NOTE that when passing in the directory, use relative paths from the CWD.
+
+TIP: Consider placing the nori wrapper script in your PATH.

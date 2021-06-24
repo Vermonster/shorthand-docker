@@ -6,7 +6,8 @@ RUN apk add --no-cache \
   openjdk11-jdk ttf-dejavu \
   build-base \
   curl \
-  make
+  make \
+  perl
 
 RUN gem install bigdecimal json jekyll etc webrick
 

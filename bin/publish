@@ -1,27 +1,43 @@
 #!/usr/bin/env bash
 
-set -x
-
 FSHTANK=$1
 [[ -z "$FSHTANK" ]] && echo "FSHTANK not set" && exit 1
 
+function replace_ping_with_curl {
+  (
+    cd $FSHTANK && \
+      perl -pi -e 'BEGIN {undef $/} s/^case "\$OSTYPE" in.*esac/curl -sSf tx.fhir.org > \/dev\/null/gms' _updatePublisher.sh
+  )
+}
+
 function run_ig_publisher {
   if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
-    if [[ -z "${DEPLOY_ENV}" ]]; then
-      echo "* Installing publisher (force)"
-      ( cd $FSHTANK && OSTYPE=linux-gnu ./_updatePublisher.sh -f )
-    else
-      echo "* Installing publisher"
-      ( cd $FSHTANK && OSTYPE=linux-gnu ./_updatePublisher.sh )
-    fi
+    echo "* Installing publisher (force)"
+    ( cd $FSHTANK && chmod 0755 *.sh && ./_updatePublisher.sh -f )
+    replace_ping_with_curl
+  fi
+
+  if [ $? -ne 0 ] ; then
+    echo "Error updating publisher"
   fi
 
   echo "* Running IG Publisher"
-  ( cd $FSHTANK && chmod 0755 *.sh && JAVA_OPTS=$JAVA_OPTS OSTYPE=linux-gnu ./_genonce.sh )
+  ( cd $FSHTANK && chmod 0755 *.sh && JAVA_OPTS=$JAVA_OPTS ./_genonce.sh )
 
-  echo "* Making symlink for GH pages"
-  ( cd $FSHTANK && ln -s ./output ./docs )
+  if [ $? -ne 0 ] ; then
+    echo "Error running publisher"
+  fi
+
+  echo "* Make a copy of /docs for GH pages"
+  ( cd $FSHTANK && cp -ap ./output ./docs/ )
+
+  if [ $? -ne 0 ] ; then
+    echo "Error copying"
+  fi
 }
+
+echo "* Fix _updatePublisher.sh"
+replace_ping_with_curl
 
 echo "* Building Implementation Guide"
 run_ig_publisher
