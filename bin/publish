@@ -30,7 +30,7 @@ function run_ig_publisher {
   fi
 
   echo "* Make a copy of /docs for GH pages"
-  ( cd $FSHTANK && cp -ap ./output ./docs/ )
+  ( cd $FSHTANK && rm -rf ./docs && cp -ap ./output ./docs/ )
 
   if [ $? -ne 0 ] ; then
     echo "!!! Error copying"
