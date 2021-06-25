@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-FSHTANK=$1
-[[ -z "$FSHTANK" ]] && echo "FSHTANK not set" && exit 1
+FSHTANK=${1-.}
 
 function replace_ping_with_curl {
   (

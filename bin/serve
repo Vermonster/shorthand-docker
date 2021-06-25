@@ -1,6 +1,5 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
-FSHTANK=$1
-[[ -z "$FSHTANK" ]] && echo "FSHTANK not set" && exit 1
+FSHTANK=${1-.}
 
 cd $FSHTANK/output && ruby -run -e httpd . -p2021
