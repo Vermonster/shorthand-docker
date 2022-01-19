@@ -2,4 +2,4 @@
 
 FSHTANK=${1-.}
 
-cd $FSHTANK/output && ruby -run -e httpd . -p2021
+cd $FSHTANK/output && ruby -run -e httpd . -p2022

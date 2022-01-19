@@ -29,9 +29,6 @@ function run_ig_publisher {
     exit 1
   fi
 
-  echo "* Make a copy of /docs for GH pages"
-  ( cd $FSHTANK && rm -rf ./docs && cp -ap ./output ./docs/ )
-
   if [ $? -ne 0 ] ; then
     echo "!!! Error copying"
     exit 1
