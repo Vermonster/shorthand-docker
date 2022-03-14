@@ -9,5 +9,5 @@ docker volume create fhir > /dev/null
 docker run -it -e JAVA_OPTS='-Xmx2048m -Xms2048m' \
   $PORT \
   --mount source=fhir,target=/home/dev/.fhir \
-  -v "$(pwd)":/home/dev/workspace shorthand-docker \
+  -v "$(pwd)":/home/dev/workspace bkaney/shorthand-docker \
   "$@"
