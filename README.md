@@ -14,7 +14,9 @@ anywhere.
 > chmod 0755 ./somewhere/in/your/path/nori
 ```
 
-Then, start a new project:
+## Example
+
+Start a new project:
 ```
 > nori sushi --init
 ```
