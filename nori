@@ -1,13 +1,95 @@
 #!/usr/bin/env bash
 
-if [[ "$@" =~ "serve" ]]; then
-  PORT="-p 2022:2022"
+# If the second parameter looks like a directory, assume it is the FSH Tank
+FSHTANK=.
+if [[ "$#" -eq 2 && ("$2" =~ ^\.|/|(/[\w-]+)+$) && (! "$2" =~ ^\-) ]]; then
+  FSHTANK=${2}
 fi
 
-docker volume create fhir > /dev/null
+setup_directories() {
+  mkdir -p ./input-cache/.gradle
+  mkdir -p ./input-cache/.fhir
+  mkdir -p ./input-cache/.node
+}
 
-docker run -it -e JAVA_OPTS='-Xmx2048m -Xms2048m' \
-  $PORT \
-  --mount source=fhir,target=/home/dev/.fhir \
-  -v "$(pwd)":/home/dev/workspace bkaney/shorthand-docker \
+run_docker() {
+MSYS_NO_PATHCONV=1 docker run --rm -it \
+  -v $(pwd)/input-cache/.fhir:/home/publisher/.fhir \
+  -v $(pwd)/input-cache/.gradle:/home/publisher/.gradle \
+  -v $(pwd)/input-cache/.node:/home/publisher/.node \
+  -v $(pwd):/home/publisher/ig \
+  hl7fhir/ig-publisher-base:latest \
   "$@"
+}
+
+run_publisher() {
+  echo "* Setting up caching directories"
+  ( cd $FSHTANK && setup_directories )
+
+  if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
+    echo "* Installing publisher (force)"
+    ( cd $FSHTANK && run_docker ./_updatePublisher.sh -f )
+  fi
+
+  if [ $? -ne 0 ] ; then
+    echo "!!! Error updating publisher"
+    exit 1
+  fi
+
+  echo "* Running IG Publisher"
+  ( cd $FSHTANK && run_docker ./_genonce.sh )
+
+  if [ $? -ne 0 ] ; then
+    echo "!!! Error running publisher"
+    exit 1
+  fi
+}
+
+#
+# Program flow...
+#
+
+if [[ $1 =~ ^(publish)$ ]]; then
+  run_publisher
+elif [[ $1 =~ (help|\-h)$ ]]; then
+
+read -r -d '' HELP <<-'EOF'
+
+Usage: nori <COMMAND> [FSH Tank]
+
+A wrapper around IG Publisher and related tools.
+
+--
+
+FSH Tank: Optional path to the root of the IG.
+
+Commands:
+  publish:  runs the IG publisher
+  sushi:    runs the sushi command
+
+NOTE: You can also run any command relative to your IG root, e.g.
+
+> nori ./_updatePublisher.sh
+
+The program also makes a few caching directories in the IG root
+./input-cache/.fhir, ./input-cache/.gradle, and ./input-cache/.node
+
+--
+
+Examples:
+
+> nori sushi --init
+> nori sushi --version
+> nori publish ./path/to/ig
+
+EOF
+
+  echo
+  echo "$HELP"
+  echo
+
+else
+
+  run_docker $@
+
+fi
