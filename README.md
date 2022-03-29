@@ -3,12 +3,16 @@
 This is a wrapper script around the FHIR IG docker image to make it a snap
 to use in your projects!
 
-## NOTE: This no longer uses the shorthand docker image, it uses the HL7 one: https://hub.docker.com/r/hl7fhir/ig-publisher-base
+**NOTE: This no longer uses the shorthand docker image, it uses the HL7 one: https://hub.docker.com/r/hl7fhir/ig-publisher-base**
 
-## Example
+## Setup
 
 First, recommend installing the `nori` script in your `$PATH`, so you can run it
 anywhere.
+```
+> curl https://raw.githubusercontent.com/Vermonster/shorthand-docker/main/nori > ./somewhere/in/your/path
+> chmod 0755 ./somewhere/in/your/path/nori
+```
 
 Then, start a new project:
 ```
