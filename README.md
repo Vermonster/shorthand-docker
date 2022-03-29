@@ -45,5 +45,5 @@ For help, use the help command:
 > nori help
 ```
 
-NOTE that when passing in the directory as the second parameter, use therelative paths from the CWD.
+NOTE that when passing in the directory as the second parameter, use relative paths from the CWD.
 
