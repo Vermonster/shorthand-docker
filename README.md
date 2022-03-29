@@ -27,6 +27,7 @@ Next, try to run the sushi command to create fsh-generated FHIR resources
 > cd ExampleIG
 > nori sushi
 ```
+(You should see `fsh-generated/resources`)
 
 Finally, build the entire IG using the Publisher
 ```
