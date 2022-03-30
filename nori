@@ -7,24 +7,22 @@ if [[ "$#" -eq 2 && ("$2" =~ ^\.|/|(/[\w-]+)+$) && (! "$2" =~ ^\-) ]]; then
 fi
 
 setup_directories() {
-  mkdir -p ./input-cache/.gradle
-  mkdir -p ./input-cache/.fhir
-  mkdir -p ./input-cache/.node
+  mkdir -p $HOME/.ig-publisher-cache/.gradle
+  mkdir -p $HOME/.ig-publisher-cache/.fhir
+  mkdir -p $HOME/.ig-publisher-cache/.node
 }
 
 run_docker() {
 MSYS_NO_PATHCONV=1 docker run --rm -it \
-  -v $(pwd)/input-cache/.fhir:/home/publisher/.fhir \
-  -v $(pwd)/input-cache/.gradle:/home/publisher/.gradle \
-  -v $(pwd)/input-cache/.node:/home/publisher/.node \
+  -v $HOME/.ig-publisher-cache/.fhir:/home/publisher/.fhir \
+  -v $HOME/.ig-publisher-cache/.gradle:/home/publisher/.gradle \
+  -v $HOME/.ig-publisher-cache/.node:/home/publisher/.node \
   -v $(pwd):/home/publisher/ig \
   hl7fhir/ig-publisher-base:latest \
   "$@"
 }
 
 run_publisher() {
-  echo "* Setting up caching directories"
-  ( cd $FSHTANK && setup_directories )
 
   if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
     echo "* Installing publisher (force)"
@@ -49,8 +47,12 @@ run_publisher() {
 # Program flow...
 #
 
+setup_directories
+
 if [[ $1 =~ ^(publish)$ ]]; then
+
   run_publisher
+
 elif [[ $1 =~ (help|\-h)$ ]]; then
 
 read -r -d '' HELP <<-'EOF'
