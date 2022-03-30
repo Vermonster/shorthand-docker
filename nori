@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Test for windows, git-bash, cygwin
+if [[ $(uname -a) == MINGW* ]]; then
+  export MYSY_NO_PATHCONV=1
+
+  if [[ \'"$(pwd)"\' == \'"$(echo $HOME)"\' ]]; then
+    echo Cannot run from your home directory on windows, make a subdirectory
+    echo and try again.
+    exit 1
+  fi
+fi
+
 # If the second parameter looks like a directory, assume it is the FSH Tank
 FSHTANK=.
 if [[ "$#" -eq 2 && ("$2" =~ ^\.|/|(/[\w-]+)+$) && (! "$2" =~ ^\-) ]]; then
@@ -13,7 +24,7 @@ setup_directories() {
 }
 
 run_docker() {
-MSYS_NO_PATHCONV=1 docker run --rm -it \
+docker run --rm -it \
   -v $HOME/.ig-publisher-cache/.fhir:/home/publisher/.fhir \
   -v $HOME/.ig-publisher-cache/.gradle:/home/publisher/.gradle \
   -v $HOME/.ig-publisher-cache/.node:/home/publisher/.node \
