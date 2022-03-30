@@ -39,6 +39,11 @@ When it is done, you can view the HTML
 > open ./output/index.html
 ```
 
+(In windows, you can try this)
+```
+> start ./output/index.html
+```
+
 ---
 
 For help, use the help command:
