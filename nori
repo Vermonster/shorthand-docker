@@ -35,7 +35,7 @@ refresh() {
 
   setup_directories
 
-  docker pull $DOCKER_IMAGE/ig-publisher-base
+  docker pull $DOCKER_IMAGE
 }
 
 run_docker() {
