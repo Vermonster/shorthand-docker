@@ -18,26 +18,28 @@ if [[ "$#" -eq 2 && ("$2" =~ ^\.|/|(/[\w-]+)+$) && (! "$2" =~ ^\-) ]]; then
 fi
 
 setup_directories() {
-  mkdir -p $HOME/.ig-publisher-cache/.gradle
-  mkdir -p $HOME/.ig-publisher-cache/.fhir
-  mkdir -p $HOME/.ig-publisher-cache/.node
+  mkdir -p "$HOME/.ig-publisher-cache/.gradle"
+  mkdir -p "$HOME/.ig-publisher-cache/.fhir"
+  mkdir -p "$HOME/.ig-publisher-cache/.node"
 }
 
 run_docker() {
+
 docker run --rm -it \
-  -v $HOME/.ig-publisher-cache/.fhir:/home/publisher/.fhir \
-  -v $HOME/.ig-publisher-cache/.gradle:/home/publisher/.gradle \
-  -v $HOME/.ig-publisher-cache/.node:/home/publisher/.node \
-  -v $(pwd):/home/publisher/ig \
+  -v "$HOME/.ig-publisher-cache/.fhir":/home/publisher/.fhir \
+  -v "$HOME/.ig-publisher-cache/.gradle":/home/publisher/.gradle \
+  -v "$HOME/.ig-publisher-cache/.node":/home/publisher/.node \
+  -v "$(pwd)":/home/publisher/ig \
   bkaney/ig-publisher-base:latest \
   "$@"
+
 }
 
 run_publisher() {
 
   if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
     echo "* Installing publisher (force)"
-    ( cd $FSHTANK && run_docker ./_updatePublisher.sh -f )
+    ( cd "$FSHTANK" && run_docker ./_updatePublisher.sh -f )
   fi
 
   if [ $? -ne 0 ] ; then
@@ -46,12 +48,13 @@ run_publisher() {
   fi
 
   echo "* Running IG Publisher"
-  ( cd $FSHTANK && run_docker ./_genonce.sh )
+  ( cd "$FSHTANK" && run_docker ./_genonce.sh )
 
   if [ $? -ne 0 ] ; then
     echo "!!! Error running publisher"
     exit 1
   fi
+
 }
 
 #
@@ -66,7 +69,7 @@ if [[ $1 =~ ^(publish)$ ]]; then
 
 elif [[ $1 =~ (help|\-h)$ ]]; then
 
-read -r -d '' HELP <<-'EOF'
+  read -r -d '' HELP <<-'EOF'
 
 Usage: nori <COMMAND> [FSH Tank]
 
