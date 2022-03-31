@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+DOCKER_IMAGE=bkaney/ig-publisher-base
+
+# NOTE: Next time they push, we can use this one
+# DOCKER_IMAGE=hl7fhir/ig-publisher-base
+
 # Test for windows, git-bash, cygwin
 if [[ $(uname -a) == MINGW* ]]; then
   export MYSY_NO_PATHCONV=1
@@ -30,7 +35,7 @@ refresh() {
 
   setup_directories
 
-  docker pull hl7fhir/ig-publisher-base
+  docker pull $DOCKER_IMAGE/ig-publisher-base
 }
 
 run_docker() {
@@ -40,7 +45,7 @@ docker run --rm -it \
   -v "$HOME/.ig-publisher-cache/.gradle":/home/publisher/.gradle \
   -v "$HOME/.ig-publisher-cache/.node":/home/publisher/.node \
   -v "$(pwd)":/home/publisher/ig \
-  hl7fhir/ig-publisher-base:latest \
+  $DOCKER_IMAGE \
   "$@"
 
 }
