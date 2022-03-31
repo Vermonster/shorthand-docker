@@ -23,6 +23,16 @@ setup_directories() {
   mkdir -p "$HOME/.ig-publisher-cache/.node"
 }
 
+refresh() {
+  rm -rf "$HOME/.ig-publisher-cache/.gradle"
+  rm -rf "$HOME/.ig-publisher-cache/.fhir"
+  rm -rf "$HOME/.ig-publisher-cache/.node"
+
+  setup_directories
+
+  docker pull hl7fhir/ig-publisher-base
+}
+
 run_docker() {
 
 docker run --rm -it \
@@ -30,7 +40,7 @@ docker run --rm -it \
   -v "$HOME/.ig-publisher-cache/.gradle":/home/publisher/.gradle \
   -v "$HOME/.ig-publisher-cache/.node":/home/publisher/.node \
   -v "$(pwd)":/home/publisher/ig \
-  bkaney/ig-publisher-base:latest \
+  hl7fhir/ig-publisher-base:latest \
   "$@"
 
 }
@@ -67,6 +77,10 @@ if [[ $1 =~ ^(publish)$ ]]; then
 
   run_publisher
 
+elif [[ $1 =~ (refresh|-r)$ ]]; then
+
+  refresh
+
 elif [[ $1 =~ (help|\-h)$ ]]; then
 
   read -r -d '' HELP <<-'EOF'
@@ -82,6 +96,7 @@ FSH Tank: Optional path to the root of the IG.
 Commands:
   publish:  runs the IG publisher
   sushi:    runs the sushi command
+  refresh:  delete cache and pull ig publisher docker image
 
 NOTE: You can also run any command relative to your IG root, e.g.
 

@@ -14,6 +14,13 @@ anywhere.
 > chmod 0755 ./somewhere/in/your/path/nori
 ```
 
+## Refresh
+
+To refresh your cache and update your docker image, use the refresh command:
+```
+> nori refresh
+```
+
 ## Example
 
 Start a new project:
