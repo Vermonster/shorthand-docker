@@ -6,6 +6,7 @@ $image="bkaney/ig-publisher-base:latest"
 
 function Invoke-InDocker {
     docker run --rm -it -v ${PWD}:/home/publisher/ig `
+        -e JAVA_OPTS='-Xmx2048m -Xms2048m' `
         -v ${HOME}\.ig-publisher-cache\.fhir:/home/publisher/.fhir `
         -v ${HOME}\.ig-publisher-cache\.gradle:/home/publisher/.gradle `
         -v ${HOME}\.ig-publisher-cache\.node:/home/publisher/.node `
