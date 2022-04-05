@@ -16,11 +16,6 @@ if [[ $(uname -a) == MINGW* ]]; then
   fi
 fi
 
-# If the second parameter looks like a directory, assume it is the FSH Tank
-FSHTANK=.
-if [[ "$#" -eq 2 && ("$2" =~ ^\.|/|(/[\w-]+)+$) && (! "$2" =~ ^\-) ]]; then
-  FSHTANK=${2}
-fi
 
 setup_directories() {
   mkdir -p "$HOME/.ig-publisher-cache/.gradle"
@@ -38,6 +33,10 @@ refresh() {
   docker pull $DOCKER_IMAGE
 }
 
+fixup_ig_scripts() {
+  [[ -e "./_genonce.sh" ]] && sed -i 's/java -jar/java $JAVA_OPTS -jar/' ./_genonce.sh
+}
+
 run_docker() {
 
 docker run --rm -it \
@@ -53,9 +52,9 @@ docker run --rm -it \
 
 run_publisher() {
 
-  if [[ ! -f "$FSHTANK/input-cache/publisher.jar" ]]; then
+  if [[ ! -f "./input-cache/publisher.jar" ]]; then
     echo "* Installing publisher (force)"
-    ( cd "$FSHTANK" && run_docker ./_updatePublisher.sh -f )
+    ( run_docker ./_updatePublisher.sh -f )
   fi
 
   if [ $? -ne 0 ] ; then
@@ -64,7 +63,7 @@ run_publisher() {
   fi
 
   echo "* Running IG Publisher"
-  ( cd "$FSHTANK" && run_docker ./_genonce.sh )
+  ( run_docker ./_genonce.sh )
 
   if [ $? -ne 0 ] ; then
     echo "!!! Error running publisher"
@@ -78,6 +77,7 @@ run_publisher() {
 #
 
 setup_directories
+fixup_ig_scripts
 
 if [[ $1 =~ ^(publish)$ ]]; then
 
@@ -91,33 +91,34 @@ elif [[ $1 =~ (help|\-h)$ ]]; then
 
   read -r -d '' HELP <<-'EOF'
 
-Usage: nori <COMMAND> [FSH Tank]
+Usage: nori <COMMAND>
 
 A wrapper around IG Publisher and related tools.
 
 --
 
-FSH Tank: Optional path to the root of the IG.
-
 Commands:
-  publish:  runs the IG publisher
+  publish:  runs the IG Publisher
   sushi:    runs the sushi command
   refresh:  delete cache and pull ig publisher docker image
 
-NOTE: You can also run any command relative to your IG root, e.g.
+NOTE: You can also run any command directly:
 
 > nori ./_updatePublisher.sh
 
-The program also makes a few caching directories in the IG root
-./input-cache/.fhir, ./input-cache/.gradle, and ./input-cache/.node
+The program also makes a few caching directories
+~/.ig-publisher-cache/.fhir
+~/.ig-publisher-cache/.gradle and
+~/.ig-publisher-cache/.node
 
 --
 
 Examples:
 
+> nori help
 > nori sushi --init
-> nori sushi --version
-> nori publish ./path/to/ig
+> nori sushi
+> nori publish
 
 EOF
 
