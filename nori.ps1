@@ -1,5 +1,7 @@
 #requires -Version 3
  
+# VERSION: 3
+
 # TODO: Replace with HL7 once they update dockerhub
 # $image="hl7fhir/ig-publisher-base"
 $image="bkaney/ig-publisher-base:latest"
