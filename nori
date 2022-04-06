@@ -34,7 +34,7 @@ refresh() {
 }
 
 fixup_ig_scripts() {
-  [[ -e "./_genonce.sh" ]] && sed -i 's/java -jar/java $JAVA_OPTS -jar/' ./_genonce.sh
+  [[ -e "./_genonce.sh" ]] && sed -i '' 's/java -jar/java $JAVA_OPTS -jar/' ./_genonce.sh
 }
 
 run_docker() {
