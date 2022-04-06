@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# VERSION: 3
+
 DOCKER_IMAGE=bkaney/ig-publisher-base
 
 # NOTE: Next time they push, we can use this one
